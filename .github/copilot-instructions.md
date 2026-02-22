@@ -16,13 +16,13 @@ This is a Node.js/Express backend for a React blog application. It exposes a RES
 - Keep route handlers thin — delegate DB logic to helper functions (e.g. `withDB`).
 - Use `res.status(200).json(data)` for successful API responses.
 - Use `res.status(500).send(...)` for error responses.
-- Use single quotes for strings in JS files.
+- Prefer single quotes for strings in JS files, but match the existing quote style within each file.
 
 ## Project Structure
 ```
 src/
-  server.js     # Express app, route definitions, static file serving
-  withDB.js     # MongoDB connection helper
+  server.js     # Express app, route definitions, static file serving (includes its own inline withDB helper)
+  withDB.js     # Standalone MongoDB connection helper module (not currently imported by server.js)
   build/        # React frontend static build (served by Express)
 ```
 
@@ -40,12 +40,12 @@ src/
 - **Article document shape**:
   ```json
   {
-    "name": "string",
-    "upvotes": "number",
-    "comments": ["string"]
+    "name": "learn-react",
+    "upvotes": 0,
+    "comments": ["Great article!", "Very helpful."]
   }
   ```
-- Always open and close the MongoDB client within each request using the `withDB` helper.
+- Always open and close the MongoDB client within each request. The inline `withDB` helper in `server.js` is the canonical pattern used for all route handlers.
 
 ## Dev Scripts
 - `npm run dev` — Start the dev server with nodemon + babel-node
